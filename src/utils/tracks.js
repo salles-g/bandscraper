@@ -1,6 +1,8 @@
 const fs = require('fs');
 const axios = require('axios');
 const cheerio = require('cheerio');
+// Utils
+const filter = require('./path');
 const { convertSeconds } = require('./time');
 
 async function getTracksInfo(url) {
@@ -21,12 +23,12 @@ async function getTracksInfo(url) {
 }
 
 function createWriteStream(folderName, fileName) {
-  const folders = folderName.split('/');
+  const folders = folderName.split('/').map((path) => filter(path));
   const [dist, artist, album] = folders;
   const paths = {
     distFolder: dist,
-    artistFolder: `${dist}/${artist}`,
-    albumFolder: `${dist}/${artist}/${album}`,
+    artistFolder: `./${dist}/${artist}`,
+    albumFolder: `./${dist}/${artist}/${album}`,
   };
 
   // check if path exists, otherwise create it
@@ -36,7 +38,7 @@ function createWriteStream(folderName, fileName) {
     }
   });
 
-  return fs.createWriteStream(`${folderName}/${fileName}`);
+  return fs.createWriteStream(`${folders.join('/')}/${fileName}`);
 }
 
 async function downloadTracks(info, url) {
@@ -49,7 +51,7 @@ async function downloadTracks(info, url) {
     console.log(`Downloading "${number}. ${fileName}" - ${duration}`);
 
     const file = createWriteStream(
-      `./dist/${info.artist}/${info.title}`,
+      `dist/${info.artist}/${info.title}`,
       fileName,
     );
     const response = await axios({
