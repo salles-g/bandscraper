@@ -1,16 +1,14 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 // Utils
-
 const {
   getAlbumInfoByJSON,
   getAlbumInfoByDOM,
 } = require('./src/utils/album');
 const { downloadTracks } = require('./src/utils/tracks');
 
-const url = 'https://blvk.bandcamp.com/album/memoir';
-
 async function getAlbumInfo() {
+  const url = process.argv[2];
   const { data } = await axios.get(url);
   const $ = cheerio.load(data);
 
