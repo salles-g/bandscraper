@@ -6,6 +6,7 @@ const {
   downloadAlbumCover,
 } = require('./src/utils/album');
 const initFolders = require('./src/utils/folders');
+const filter = require('./src/utils/path');
 const { downloadTracks } = require('./src/utils/tracks');
 
 async function init() {
@@ -18,7 +19,11 @@ async function init() {
   );
 
   const albumInfo = getAlbumInfo($, info);
-  const path = `dist/${albumInfo.artist}/${albumInfo.title}`;
+  const path = albumInfo
+    ? `dist/${filter(albumInfo.artist)}/${filter(albumInfo.title)}`
+    : '';
+
+  if (!path) return console.error('Album not found');
 
   initFolders(path);
   downloadAlbumCover(albumInfo.cover, path);
