@@ -5,6 +5,8 @@ const filter = require('./path');
 const { convertTime } = require('./time');
 
 function getAlbumInfoByJSON(json) {
+  if (!json.track) return;
+
   return {
     title: json.name,
     artist: json.byArtist.name,

@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.26.1",
-    "cheerio": "^1.0.0-rc.10"
+    "cheerio": "^1.0.0-rc.10",
+    "ffmetadata": "^1.7.0",
+    "ffmpeg-static-electron": "^2.0.3"
   }
 }

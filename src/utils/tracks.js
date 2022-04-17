@@ -1,8 +1,10 @@
 const fs = require('fs');
 const axios = require('axios');
+const stream = require('stream');
 const cheerio = require('cheerio');
 // Utils
 const filter = require('./path');
+const writeMetadata = require('./metadata');
 const { convertSeconds } = require('./time');
 
 async function getTracksInfo(url) {
@@ -23,7 +25,9 @@ async function getTracksInfo(url) {
 }
 
 function createWriteStream(folderName, fileName) {
-  const folders = folderName.split('/').map((path) => filter(path));
+  const folders = folderName
+    .split('/')
+    .map((subpath) => filter(subpath));
   const [dist, artist, album] = folders;
   const paths = {
     distFolder: dist,
@@ -47,20 +51,28 @@ async function downloadTracks(info, url) {
   for (const track of tracks) {
     const { url, title, number, duration } = track;
     const fileName = `${title}.mp3`;
+    const filteredPath = `dist/${filter(info.artist)}/${filter(
+      info.title,
+    )}/${filter(fileName)}`;
 
     console.log(`Downloading "${number}. ${fileName}" - ${duration}`);
 
-    const file = createWriteStream(
-      `dist/${info.artist}/${info.title}`,
-      fileName,
-    );
+    const file = fs.createWriteStream(filteredPath);
     const response = await axios({
       url,
       method: 'GET',
       responseType: 'stream',
     });
 
-    response.data.pipe(file);
+    await response.data.pipe(file);
+
+    await stream.finished(file, function (error) {
+      if (error) {
+        console.error('Stream failed.', error);
+      } else {
+        writeMetadata(info, track, filteredPath);
+      }
+    });
 
     await new Promise((resolve, reject) => {
       file.on('finish', resolve);
