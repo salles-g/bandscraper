@@ -42,7 +42,7 @@ function getAlbumInfoByDOM($) {
     cover: $('.popupImage img').attr('src'),
     tracks: $('.track_list tr')
       .map((_, el) => {
-        return getTrackInfo($, el, dom);
+        return getTrackInfo($, el);
       })
       .get(),
   };
