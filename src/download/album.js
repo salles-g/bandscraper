@@ -3,6 +3,8 @@ const axios = require('axios');
 const filter = require('../utils/string/path');
 
 async function downloadAlbumCover(url, path) {
+  if (!url) return 'No album cover found';
+
   console.log('Downloading album cover...');
   const filteredPath = path
     .split('/')

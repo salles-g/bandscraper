@@ -15,11 +15,13 @@ async function init($, json) {
     : '';
 
   if (!path) return console.error('Album not found');
+  
+  const player = $('meta[property="twitter:player"]').attr('content');
+  if (!player) return 'Could not find player data';
 
   initFolders(path);
-  downloadAlbumCover(info.cover, path);
+  await downloadAlbumCover(info.cover, path);
 
-  const player = $('meta[property="twitter:player"]').attr('content');
   await downloadTracks(info, player);
 }
 
