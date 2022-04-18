@@ -1,5 +1,5 @@
 const fs = require('fs');
-const filter = require('./path');
+const filter = require('./string/path');
 
 function initFolders(folderName) {
   const folders = folderName.split('/').map((path) => filter(path));

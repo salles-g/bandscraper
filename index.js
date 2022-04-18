@@ -1,11 +1,12 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 // Utils
-const { getInfo, downloadAlbumCover } = require('./src/utils/album');
+const getInfo = require('./src/utils/info');
+const filter = require('./src/utils/string/path');
+const joinUrls = require('./src/utils/string/url');
 const initFolders = require('./src/utils/folders');
-const filter = require('./src/utils/path');
-const joinUrls = require('./src/utils/url.js');
-const { downloadTracks } = require('./src/utils/tracks');
+const downloadAlbumCover = require('./src/download/album');
+const { downloadTracks } = require('./src/download/tracks');
 
 async function init($, json) {
   const info = getInfo($, json);
