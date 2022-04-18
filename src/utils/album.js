@@ -3,6 +3,7 @@ const axios = require('axios');
 // Utils
 const filter = require('./path');
 const { convertTime } = require('./time');
+const getSingleInfo = require('./single');
 
 function getAlbumInfoByJSON(json) {
   if (!json.track) return;
@@ -47,7 +48,11 @@ function getAlbumInfoByDOM($) {
   };
 }
 
-function getAlbumInfo($, info) {
+function getInfo($, info) {
+  if (info?.inAlbum?.albumReleaseType === 'SingleRelease') {
+    return getSingleInfo(info);
+  }
+
   return info ? getAlbumInfoByJSON(info) : getAlbumInfoByDOM($);
 }
 
@@ -73,4 +78,4 @@ async function downloadAlbumCover(url, path) {
   });
 }
 
-module.exports = { getAlbumInfo, downloadAlbumCover };
+module.exports = { getInfo, downloadAlbumCover };

@@ -1,10 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 // Utils
-const {
-  getAlbumInfo,
-  downloadAlbumCover,
-} = require('./src/utils/album');
+const { getInfo, downloadAlbumCover } = require('./src/utils/album');
 const initFolders = require('./src/utils/folders');
 const filter = require('./src/utils/path');
 const { downloadTracks } = require('./src/utils/tracks');
@@ -18,7 +15,7 @@ async function init() {
     $('script[type="application/ld+json"]').html(),
   );
 
-  const albumInfo = getAlbumInfo($, info);
+  const albumInfo = getInfo($, info);
   const path = albumInfo
     ? `dist/${filter(albumInfo.artist)}/${filter(albumInfo.title)}`
     : '';
