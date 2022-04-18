@@ -24,27 +24,6 @@ async function getTracksInfo(url) {
   return tracks;
 }
 
-function createWriteStream(folderName, fileName) {
-  const folders = folderName
-    .split('/')
-    .map((subpath) => filter(subpath));
-  const [dist, artist, album] = folders;
-  const paths = {
-    distFolder: dist,
-    artistFolder: `./${dist}/${artist}`,
-    albumFolder: `./${dist}/${artist}/${album}`,
-  };
-
-  // check if path exists, otherwise create it
-  Object.keys(paths).forEach((path) => {
-    if (!fs.existsSync(paths[path])) {
-      fs.mkdirSync(paths[path]);
-    }
-  });
-
-  return fs.createWriteStream(`${folders.join('/')}/${fileName}`);
-}
-
 async function downloadTracks(info, url) {
   const tracks = await getTracksInfo(url);
 
